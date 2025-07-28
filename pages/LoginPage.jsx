@@ -1,8 +1,7 @@
-// src/pages/LoginPage.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, googleProvider, githubProvider } from '../src/firebaseConfig';
-import { signInWithPopup, signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { useQuiz } from '../context/QuizContext';
 
 function LoginPage() {
@@ -23,13 +22,13 @@ function LoginPage() {
     }
   };
 
-  const handleSocialLogin = async (provider) => {
+  const handleSocialAuth = async (provider) => {
     try {
-      const result = await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider); // Same logic for login or account creation
       dispatch({ type: 'START_QUIZ', payload: result.user.email });
       navigate('/quiz');
     } catch (error) {
-      alert("Login failed: " + error.message);
+      alert("Authentication failed: " + error.message);
     }
   };
 
@@ -44,8 +43,8 @@ function LoginPage() {
 
       <div className="divider"><span>OR</span></div>
 
-      <button className="social-btn google-btn" onClick={() => handleSocialLogin(googleProvider)}>Sign in with Google</button>
-      <button className="social-btn github-btn" onClick={() => handleSocialLogin(githubProvider)}>Sign in with GitHub</button>
+      <button className="social-btn google-btn" onClick={() => handleSocialAuth(googleProvider)}>Continue with Google</button>
+      <button className="social-btn github-btn" onClick={() => handleSocialAuth(githubProvider)}>Continue with GitHub</button>
     </div>
   );
 }
