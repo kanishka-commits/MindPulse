@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
+// useEffect for checking URL on page load
 import { useNavigate } from 'react-router-dom';
 import { auth, googleProvider, githubProvider } from '../src/firebaseConfig'; // Assuming firebaseConfig is in src/
 import {
-  sendSignInLinkToEmail,
-  signInWithEmailLink,
-  isSignInWithEmailLink,
-  signInWithPopup, // 1. Added missing import
+  sendSignInLinkToEmail, // send a login link via email
+  signInWithEmailLink, // complete the login when user clicks the link
+  isSignInWithEmailLink, // checks if the URL is a valid login link
+  signInWithPopup, // login using popup (Google/GitHub)
 } from 'firebase/auth';
 import { useQuiz } from '../context/QuizContext';
 import styles from './StartPage.module.css';
 
 function StartPage() {
+  // const [msg, setMsg] = useState('');
   const navigate = useNavigate();
-  const { dispatch } = useQuiz();
+  const { dispatch } = useQuiz();  // To start quiz when login is done
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -24,7 +26,7 @@ function StartPage() {
       const result = await signInWithPopup(auth, provider);
       const userEmail = result.user.email;
       
-      // 2. Added logic to persist session and start quiz
+      // Added logic to persist session and start quiz
       localStorage.setItem('token', await result.user.getIdToken()); // Store a token for persistence
       localStorage.setItem('userEmail', userEmail);
       
@@ -37,7 +39,7 @@ function StartPage() {
   };
 
   const handleGuestLogin = () => {
-    // 3. Made localStorage clearing safer
+    // Made localStorage clearing safer
     localStorage.removeItem('token');
     localStorage.removeItem('userEmail');
     localStorage.setItem('guest', 'true');
@@ -107,7 +109,6 @@ function StartPage() {
       }
     }
   }, [dispatch, navigate]);
-
   return (
     <div className="page-center">
       <div className={styles.container}>
@@ -115,7 +116,6 @@ function StartPage() {
         <p className={styles.description}>
           Sign in with your email for a passwordless experience, or use a social account.
         </p>
-
         <div className={styles.emailForm}>
           <input
             type="email"
@@ -128,7 +128,6 @@ function StartPage() {
             Send Sign-in Link
           </button>
         </div>
-
         {message && <p className={styles.success}>{message}</p>}
         {error && <p className={styles.error}>{error}</p>}
 
@@ -141,7 +140,7 @@ function StartPage() {
             <button onClick={() => handleSocialLogin(githubProvider)} className="social-btn github-btn">
               Continue with GitHub
             </button>
-            <button className="social-btn guest-btn" onClick={handleGuestLogin}>
+            <button onClick={handleGuestLogin} className="social-btn guest-btn" >
               Continue as Guest
             </button>
         </div>
