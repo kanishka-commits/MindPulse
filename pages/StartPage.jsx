@@ -1,41 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import styles from './StartPage.module.css';
 
 function StartPage() {
   const navigate = useNavigate();
-  // const [darkMode, setDarkMode] = useState(() => {
-  //   // Check localStorage for dark mode preference
-  //   const stored = localStorage.getItem('darkMode');
-  //   return stored ? JSON.parse(stored) : false;
-  // });
-
-  // useEffect(() => {
-  //   // Apply dark mode class to body
-  //   if (darkMode) {
-  //     document.body.classList.add('dark');
-  //   } else {
-  //     document.body.classList.remove('dark');
-  //   }
-  //   // Store preference
-  //   localStorage.setItem('darkMode', JSON.stringify(darkMode));
-  // }, [darkMode]);
-
-  // const toggleDarkMode = () => {
-  //   setDarkMode(prev => !prev);
-  // };
-
-  
 
   return (
-    
     <div className="page-center">
-      {/* <h1 className="app-title">🧠 QuizMaster</h1>
-        <button className="dark-mode-toggle" onClick={toggleDarkMode}>
-          {darkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
-        </button> */}
-      <div className="start-container">
-        <h1>Welcome to the Mind Pulse!</h1>
-        <p className="quiz-description">
+      <div className={styles.container}>
+        <h1 className={styles.title}>Welcome to Mind Pulse!</h1>
+        <p className={styles.description}>
           Test your knowledge across multiple domains with 15 curated questions.
           <br />
           🕒 You have 30 minutes to complete the quiz.
@@ -43,16 +17,16 @@ function StartPage() {
           🎯 Aim for accuracy — results will be shared instantly!
         </p>
 
-        <div className="auth-buttons">
+        <div className={styles.authButtons}>
           <button
-            className="btn btn-primary"
+            className={styles.button}
             onClick={() => navigate('/login')}
           >
             Login
           </button>
 
           <button
-            className="btn btn-secondary"
+            className={styles.button}
             onClick={() => navigate('/register')}
           >
             Register
