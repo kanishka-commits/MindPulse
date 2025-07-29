@@ -1,5 +1,13 @@
-import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { auth, googleProvider, githubProvider } from '../src/firebaseConfig';
+import {
+  signInWithPopup,
+  sendSignInLinkToEmail,
+  signInWithEmailLink,
+} from 'firebase/auth';
+import { useQuiz } from '../context/QuizContext';
+import styles from './StartPage.module.css';
 
 function decodeHTMLEntities(text) {
   const textarea = document.createElement('textarea');

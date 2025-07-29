@@ -41,6 +41,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+body.dark {
+  background-color: #121212;
+  color: #f0f0f0;
+}
+
+body.dark .navbar {
+  background-color: #1f1f1f;
+}
+
+body.dark button {
+  background-color: #333;
+}
+
 .app-container {
   max-width: 1200px;
   margin: 0 auto;

@@ -20,6 +20,6 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
-const twitterProvider = new TwitterAuthProvider();
 
-export { auth, googleProvider, githubProvider, twitterProvider };
+
+export { auth, googleProvider, githubProvider };

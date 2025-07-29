@@ -1,36 +1,149 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { auth, googleProvider, githubProvider } from '../src/firebaseConfig'; // Assuming firebaseConfig is in src/
+import {
+  sendSignInLinkToEmail,
+  signInWithEmailLink,
+  isSignInWithEmailLink,
+  signInWithPopup, // 1. Added missing import
+} from 'firebase/auth';
+import { useQuiz } from '../context/QuizContext';
 import styles from './StartPage.module.css';
 
 function StartPage() {
   const navigate = useNavigate();
+  const { dispatch } = useQuiz();
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+
+  // --- Login Handlers ---
+
+  const handleSocialLogin = async (provider) => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const userEmail = result.user.email;
+      
+      // 2. Added logic to persist session and start quiz
+      localStorage.setItem('token', await result.user.getIdToken()); // Store a token for persistence
+      localStorage.setItem('userEmail', userEmail);
+      
+      dispatch({ type: 'START_QUIZ', payload: userEmail });
+      navigate('/quiz');
+    } catch (err) {
+      console.error('Social sign-in error:', err);
+      setError('Login failed. Please try again.');
+    }
+  };
+
+  const handleGuestLogin = () => {
+    // 3. Made localStorage clearing safer
+    localStorage.removeItem('token');
+    localStorage.removeItem('userEmail');
+    localStorage.setItem('guest', 'true');
+    
+    // The START_QUIZ action already resets the state, so RESET_QUIZ is not needed.
+    dispatch({ type: 'START_QUIZ', payload: 'Guest User' });
+    navigate('/quiz');
+  };
+
+  const handleSendLink = async () => {
+    if (!email) {
+      setError('Please enter an email address.');
+      return;
+    }
+    setError('');
+    setMessage('');
+
+    const actionCodeSettings = {
+      // URL you want to redirect back to. The domain (www.example.com) must be authorized
+      // in the Firebase Console.
+      url: window.location.origin, // Redirect to the base URL
+      handleCodeInApp: true,
+    };
+
+    try {
+      await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+      localStorage.setItem('emailForSignIn', email);
+      setMessage(`Sign-in link sent to ${email}. Please check your inbox.`);
+    } catch (err) {
+      console.error(err);
+      setError('Failed to send link. Please check the email and try again.');
+    }
+  };
+
+  // --- Effect to handle user returning from email link ---
+
+  useEffect(() => {
+    const completeSignIn = async (emailToSignIn, url) => {
+      try {
+        const result = await signInWithEmailLink(auth, emailToSignIn, url);
+        localStorage.removeItem('emailForSignIn'); // Clean up
+        
+        const userEmail = result.user.email;
+        localStorage.setItem('token', await result.user.getIdToken());
+        localStorage.setItem('userEmail', userEmail);
+        
+        // 4. Removed redundant RESET_QUIZ dispatch
+        dispatch({ type: 'START_QUIZ', payload: userEmail });
+        navigate('/quiz');
+      } catch (err) {
+        console.error('Login with email link failed:', err);
+        setError('Login failed. The link may have expired or is invalid.');
+      }
+    };
+
+    const url = window.location.href;
+    if (isSignInWithEmailLink(auth, url)) {
+      let emailFromStorage = localStorage.getItem('emailForSignIn');
+      if (!emailFromStorage) {
+        // This can happen if the user opens the link on a different device.
+        emailFromStorage = window.prompt('Please provide your email for confirmation');
+      }
+      if (emailFromStorage) {
+        completeSignIn(emailFromStorage, url);
+      } else {
+        setError("Could not complete sign-in without an email.");
+      }
+    }
+  }, [dispatch, navigate]);
 
   return (
     <div className="page-center">
       <div className={styles.container}>
         <h1 className={styles.title}>Welcome to Mind Pulse!</h1>
         <p className={styles.description}>
-          Test your knowledge across multiple domains with 15 curated questions.
-          <br />
-          🕒 You have 30 minutes to complete the quiz.
-          <br />
-          🎯 Aim for accuracy — results will be shared instantly!
+          Sign in with your email for a passwordless experience, or use a social account.
         </p>
 
-        <div className={styles.authButtons}>
-          <button
-            className={styles.button}
-            onClick={() => navigate('/login')}
-          >
-            Login
+        <div className={styles.emailForm}>
+          <input
+            type="email"
+            placeholder="Enter your email"
+            className={styles.input}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <button className={styles.button} onClick={handleSendLink}>
+            Send Sign-in Link
           </button>
+        </div>
 
-          <button
-            className={styles.button}
-            onClick={() => navigate('/register')}
-          >
-            Register
-          </button>
+        {message && <p className={styles.success}>{message}</p>}
+        {error && <p className={styles.error}>{error}</p>}
+
+        <div className="divider"><span>OR</span></div>
+
+        <div className={styles.socialButtons}>
+            <button onClick={() => handleSocialLogin(googleProvider)} className="social-btn google-btn">
+              Continue with Google
+            </button>
+            <button onClick={() => handleSocialLogin(githubProvider)} className="social-btn github-btn">
+              Continue with GitHub
+            </button>
+            <button className="social-btn guest-btn" onClick={handleGuestLogin}>
+              Continue as Guest
+            </button>
         </div>
       </div>
     </div>
