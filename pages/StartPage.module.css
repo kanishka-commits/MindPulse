@@ -1,84 +1,86 @@
-/* StartPage.module.css */
-.input {
-  padding: 0.5rem;
-  width: 100%;
-  font-size: 1rem;
-  margin-bottom: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
-
-.success {
-  color: green;
-  margin-top: 0.5rem;
-}
-
-.buttonSecondary {
-  background-color: transparent;
-  color: #4a4a4a;
-  border: 2px solid #4a4a4a;
-  padding: 0.6rem 1.2rem;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.buttonSecondary:hover {
-  background-color: #4a4a4a;
-  color: white;
-}
-
-.container {
-  animation: fadeInUp 0.6s ease;
-  max-width: 600px;
-  margin: auto;
-  padding: 3rem 2rem;
-  border-radius: 8px;
-  background: white;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  text-align: center;
-}
-
-.title {
-  font-size: 2.5rem;
-  color: #0077cc;
-  margin-bottom: 1rem;
-}
-
-.description {
-  font-size: 1.1rem;
-  line-height: 1.7;
-  color: #555;
-}
-
-.authButtons {
+/* Main container to create the two-column layout */
+.pageContainer {
   display: flex;
+  align-items: center; /* This vertically centers the content */
   justify-content: center;
-  gap: 1.25rem;
-  margin-top: 2rem;
+  min-height: 100vh; /* Takes full height of the screen */
+  width: 100%;
+  padding: 2rem;
+  box-sizing: border-box;
+  background-color: #e0eafc; /* Light blue background like the image */
 }
 
-.button {
-  min-width: 120px;
-  padding: 0.75rem 1.75rem;
+/* Column for the content on the left */
+.leftColumn {
+  flex: 1; /* Takes up 50% of the available space */
+  max-width: 550px; /* Prevents the content from being too wide on large screens */
+  padding-right: 2rem; /* Adds some space between content and the (empty) right column */
+}
+
+/* Empty column on the right */
+.rightColumn {
+  flex: 1; /* Takes up the other 50% of the space */
+}
+
+/* --- Content Styling --- */
+
+/* Big title style */
+.title {
+  font-size: 4rem; /* Big and bold */
+  font-weight: 700;
+  line-height: 1.1;
+  color: #2c3e50; /* A dark, soft black */
+  margin-bottom: 1rem;
+}
+
+/* Subtitle style */
+.description {
+  font-size: 1.2rem;
+  color: #555e68;
+  margin-bottom: 2.5rem;
+}
+
+/* Container for the input and button */
+.emailForm {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* Space between input and button */
+}
+
+/* Input field style */
+.input {
+  flex-grow: 1; /* Allows input to take up available space */
+  padding: 16px 20px;
   font-size: 1rem;
   border-radius: 8px;
-  font-weight: 600;
-  transition: transform 0.2s ease, background-color 0.3s ease;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
+
+/* Button style */
+.button {
+  background-color: #ff5a5f; /* A reddish color like the image */
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 8px;
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 .button:hover {
-  transform: scale(1.05);
+  background-color: #e0484b;
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* --- Message Styling --- */
+.success {
+  margin-top: 1rem;
+  color: #28a745;
+}
+
+.error {
+  margin-top: 1rem;
+  color: #dc3545;
 }
