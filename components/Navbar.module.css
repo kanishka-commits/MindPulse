@@ -1,94 +1,130 @@
-/* Main navbar container */
+/* Navbar.module.css (Elevated) */
+
+@keyframes brand-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
-  background-color: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid #e9ecef;
+  padding: 0.75rem clamp(1rem, 5vw, 2.5rem); /* Responsive padding */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: var(--nav-background);
+  /* Using a gradient for the border for a more subtle look */
+  border-bottom: 1px solid;
+  border-image-source: linear-gradient(to right, transparent, var(--nav-border), transparent);
+  border-image-slice: 1;
+  box-shadow: 0 2px 8px -2px var(--shadow-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
 }
 
-/* Brand/logo styling */
 .brand {
-  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.6rem;
   font-weight: 700;
-  color: #343a40;
+  color: var(--text-primary);
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* Container for action buttons */
+.brand:hover {
+  transform: scale(1.02);
+  /* Animated gradient text effect on hover */
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color), var(--primary-color));
+  background-size: 200% auto;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: brand-gradient 4s ease infinite;
+}
+
 .actions {
   display: flex;
-  gap: 1rem;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-/* General button styling */
-.navButton {
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  border: 1px solid #ced4da;
-  background-color: #f8f9fa;
-  color: #495057;
+.iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem;
+  border-radius: 10px; /* Slightly more rounded */
+  border: 1px solid transparent; /* Start with a transparent border */
+  background-color: var(--card-background);
+  color: var(--text-secondary);
+  cursor: pointer;
+  /* Using a more sophisticated transition timing function */
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Combined hover and focus-visible state for a consistent experience */
+.iconButton:hover,
+.iconButton:focus-visible {
+  color: var(--primary-color);
+  transform: translateY(-3px) scale(1.05);
+  background-color: var(--card-background);
+  border-color: var(--nav-border);
+  box-shadow: 0 4px 12px -2px var(--shadow-color);
+}
+
+/* Specific focus state for keyboard users for better accessibility */
+.iconButton:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.buttonText {
   font-size: 0.9rem;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  /* The color will be inherited from the parent .logoutButton state */
+  color: inherit;
+  transition: color 0.3s ease;
 }
 
-.navButton:hover {
-  background-color: #e9ecef;
-  border-color: #adb5bd;
-}
-
-/* Specific styling for the logout button */
 .logoutButton {
-  background-color: #fff0f1;
-  border-color: #ffb3b8;
-  color: #dc3545;
+  color: var(--danger-color);
+  background-color: var(--danger-bg);
 }
 
-.logoutButton:hover {
-  background-color: #ffe6e8;
-  border-color: #ff8fa3;
+.logoutButton:hover,
+.logoutButton:focus-visible {
+  color: var(--danger-color);
+  background-color: var(--danger-bg);
+  /* Add a colored glow for emphasis */
+  box-shadow: 0 0 12px 0px var(--danger-color);
 }
 
-/* --- Dark Mode Styles --- */
-/* You would add this to a global CSS file like index.css */
-/*
-body.dark-mode {
-  background-color: #121212;
-  color: #e0e0e0;
+.logoutButton:focus-visible {
+  outline-color: var(--danger-color);
 }
 
-.dark-mode .navbar {
-  background-color: #1e1e1e;
-  border-bottom-color: #333;
-  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
+@media (max-width: 600px) {
+  .navbar {
+    padding: 0.75rem 1.25rem;
+  }
+  .brand {
+    font-size: 1.25rem;
+  }
+  .buttonText {
+    display: none;
+  }
+  .logoutButton {
+    padding: 0.6rem;
+  }
 }
-
-.dark-mode .brand {
-  color: #ffffff;
-}
-
-.dark-mode .navButton {
-  background-color: #333;
-  border-color: #555;
-  color: #e0e0e0;
-}
-
-.dark-mode .navButton:hover {
-  background-color: #444;
-  border-color: #777;
-}
-
-.dark-mode .logoutButton {
-  background-color: #4a2529;
-  border-color: #a13d47;
-  color: #ffb3b8;
-}
-
-.dark-mode .logoutButton:hover {
-  background-color: #5e3036;
-  border-color: #c75e6a;
-}
-*/
