@@ -1,93 +1,145 @@
-//ReportPage.jsx
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import styles from './ReportPage.module.css'; // Import the new CSS module
+import PropTypes from 'prop-types';
+import styles from './ReportPage.module.css';
 
-// Helper to decode HTML entities like &quot;
-function decodeHTMLEntities(text) {
+// Helper to decode HTML entities
+const decodeHTMLEntities = (text) => {
   if (!text) return '';
   const textarea = document.createElement('textarea');
   textarea.innerHTML = text;
   return textarea.value;
-}
+};
+
+// --- Sub-components for better structure and readability ---
+
+/**
+ * Displays the final score with a visual progress ring.
+ */
+const ScoreSummary = ({ score, total }) => {
+  const percentage = total > 0 ? (score / total) * 100 : 0;
+  const circumference = 2 * Math.PI * 45; // 2 * pi * radius
+  const strokeDashoffset = circumference - (percentage / 100) * circumference;
+
+  return (
+    <div className={styles.scoreSection}>
+      <div className={styles.progressRing}>
+        <svg className={styles.progressRingSvg} width="120" height="120">
+          <circle className={styles.progressRingBg} strokeWidth="8" r="45" cx="60" cy="60" />
+          <circle
+            className={styles.progressRingFg}
+            strokeWidth="8"
+            r="45"
+            cx="60"
+            cy="60"
+            style={{ strokeDasharray: circumference, strokeDashoffset }}
+          />
+        </svg>
+        <span className={styles.progressRingText}>{Math.round(percentage)}%</span>
+      </div>
+      <p className={styles.score}>
+        You scored <strong>{score}</strong> out of <strong>{total}</strong>
+      </p>
+    </div>
+  );
+};
+ScoreSummary.propTypes = {
+  score: PropTypes.number.isRequired,
+  total: PropTypes.number.isRequired,
+};
+
+/**
+ * A memoized component for rendering each question's review block.
+ */
+const QuestionReview = React.memo(({ question, userAnswer, index }) => {
+  const isUnanswered = userAnswer === null || userAnswer === undefined;
+
+  return (
+    <div className={styles.questionBlock}>
+      <h4 className={styles.questionText}>
+        <span>Q{index + 1}:</span> {decodeHTMLEntities(question.question)}
+      </h4>
+
+      <ul className={styles.optionsList}>
+        {question.all_answers.map((option) => {
+          const isCorrect = option === question.correct_answer;
+          const isSelected = userAnswer === option;
+
+          let optionClass = styles.normal;
+          if (isCorrect) optionClass = styles.correct;
+          else if (isSelected) optionClass = styles.incorrect;
+
+          return (
+            <li key={option} className={optionClass}>
+              {decodeHTMLEntities(option)}
+              {isCorrect && <span className={styles.icon}>✅</span>}
+              {isSelected && !isCorrect && <span className={styles.icon}>❌</span>}
+            </li>
+          );
+        })}
+      </ul>
+
+      {isUnanswered && <p className={styles.unanswered}>⚠️ You did not answer this question.</p>}
+    </div>
+  );
+});
+QuestionReview.propTypes = {
+  question: PropTypes.object.isRequired,
+  userAnswer: PropTypes.string,
+  index: PropTypes.number.isRequired,
+};
+QuestionReview.displayName = 'QuestionReview';
+
+/**
+ * Renders a message when no quiz data is available.
+ */
+const NoData = ({ onGoHome }) => (
+  <div className={styles.reportPage}>
+    <div className={styles.reportContainer}>
+      <h2 className={styles.header}>⚠️ No Quiz Data Available</h2>
+      <p>It seems you've navigated here directly without completing a quiz.</p>
+      <button onClick={onGoHome} className={styles.homeButton}>
+        Go Back to Home
+      </button>
+    </div>
+  </div>
+);
+NoData.propTypes = {
+  onGoHome: PropTypes.func.isRequired,
+};
+
+// --- Main ReportPage Component ---
 
 function ReportPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  // Provide a fallback for state to prevent errors if the user navigates here directly
   const { questions, answers } = location.state || { questions: [], answers: {} };
 
-  // Redirect if there's no data to display
+  const score = useMemo(() => {
+    if (!questions || !answers) return 0;
+    return questions.reduce((acc, q, i) => acc + (answers[i] === q.correct_answer ? 1 : 0), 0);
+  }, [questions, answers]);
+
   if (!questions || questions.length === 0) {
-    return (
-      <div className={styles.reportPage}>
-        <div className={styles.reportContainer}>
-          <h2 className={styles.header}>⚠️ No Quiz Data Available</h2>
-          <p>It looks like you've landed here without completing a quiz.</p>
-          <button onClick={() => navigate('/')} className={styles.homeButton}>
-            Go Back to Home
-          </button>
-        </div>
-      </div>
-    );
+    return <NoData onGoHome={() => navigate('/')} />;
   }
-
-  const score = questions.reduce((acc, q, i) => {
-    return acc + (answers[i] === q.correct_answer ? 1 : 0);
-  }, 0);
-
-  const total = questions.length;
 
   return (
     <div className={styles.reportPage}>
       <div className={styles.reportContainer}>
         <h2 className={styles.header}>📋 Quiz Report</h2>
-        <p className={styles.score}>
-          You scored <strong>{score}</strong> out of <strong>{total}</strong>
-        </p>
+        <ScoreSummary score={score} total={questions.length} />
 
         <div className={styles.reviewSection}>
-          {questions.map((q, i) => {
-            const correctAnswer = q.correct_answer;
-            const userAnswer = answers[i];
-            const isUnanswered = userAnswer === null || userAnswer === undefined;
-
-            return (
-              <div key={i} className={styles.questionBlock}>
-                <h4 className={styles.questionText}>
-                  <span>Q{i + 1}:</span> {decodeHTMLEntities(q.question)}
-                </h4>
-
-                <ul className={styles.optionsList}>
-                  {q.all_answers.map((option, idx) => {
-                    const isCorrect = option === correctAnswer;
-                    const isSelected = userAnswer === option;
-
-                    // Determine the class for styling based on the answer's status
-                    const optionClass = isCorrect
-                      ? styles.correct
-                      : isSelected
-                      ? styles.incorrect
-                      : styles.normal;
-
-                    return (
-                      <li key={idx} className={optionClass}>
-                        {decodeHTMLEntities(option)}
-                        {isCorrect && " ✅"}
-                        {isSelected && !isCorrect && " ❌"}
-                      </li>
-                    );
-                  })}
-                </ul>
-
-                {isUnanswered && (
-                  <p className={styles.unanswered}>
-                    ⚠️ You did not answer this question.
-                  </p>
-                )}
-              </div>
-            );
-          })}
+          <h3 className={styles.reviewHeader}>Review Your Answers</h3>
+          {questions.map((q, i) => (
+            <QuestionReview
+              key={q.question} // Using question text as key; a unique ID would be better
+              question={q}
+              userAnswer={answers[i]}
+              index={i}
+            />
+          ))}
         </div>
 
         <div className={styles.footer}>

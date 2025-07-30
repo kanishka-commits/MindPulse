@@ -1,68 +1,63 @@
-/* Main container to create the two-column layout */
-.pageContainer {
+/* StartPage.module.css */
+
+/* Main container to center the content on the page */
+.pageCenter {
   display: flex;
-  align-items: center; /* This vertically centers the content */
+  align-items: center;
   justify-content: center;
-  min-height: 100vh; /* Takes full height of the screen */
+  min-height: 100vh;
   width: 100%;
   padding: 2rem;
   box-sizing: border-box;
-  background-color: #e0eafc; /* Light blue background like the image */
+  background-color: var(--background-color);
 }
 
-/* Column for the content on the left */
-.leftColumn {
-  flex: 1; /* Takes up 50% of the available space */
-  max-width: 550px; /* Prevents the content from being too wide on large screens */
-  padding-right: 2rem; /* Adds some space between content and the (empty) right column */
+/* The main content card */
+.container {
+  max-width: 500px;
+  width: 100%;
+  background-color: var(--card-background);
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px var(--shadow-color);
+  text-align: center;
 }
 
-/* Empty column on the right */
-.rightColumn {
-  flex: 1; /* Takes up the other 50% of the space */
-}
-
-/* --- Content Styling --- */
-
-/* Big title style */
 .title {
-  font-size: 4rem; /* Big and bold */
+  font-size: 2.5rem;
   font-weight: 700;
-  line-height: 1.1;
-  color: #2c3e50; /* A dark, soft black */
+  color: var(--text-primary);
   margin-bottom: 1rem;
 }
 
-/* Subtitle style */
 .description {
-  font-size: 1.2rem;
-  color: #555e68;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
   margin-bottom: 2.5rem;
 }
 
-/* Container for the input and button */
+/* Email form styling */
 .emailForm {
   display: flex;
-  align-items: center;
-  gap: 1rem; /* Space between input and button */
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
 }
 
-/* Input field style */
 .input {
-  flex-grow: 1; /* Allows input to take up available space */
-  padding: 16px 20px;
+  padding: 14px 18px;
   font-size: 1rem;
   border-radius: 8px;
-  border: 1px solid #ccc;
-  background-color: #fff;
+  border: 1px solid var(--border-color);
+  background-color: var(--background-color);
+  color: var(--text-primary);
 }
 
-/* Button style */
 .button {
-  background-color: #ff5a5f; /* A reddish color like the image */
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--text-on-primary);
   border: none;
-  padding: 16px 32px;
+  padding: 14px 28px;
   font-size: 1rem;
   font-weight: bold;
   border-radius: 8px;
@@ -70,17 +65,73 @@
   transition: background-color 0.2s ease;
 }
 
-.button:hover {
-  background-color: #e0484b;
+/* Divider with 'OR' text */
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: var(--text-secondary);
+  margin: 2rem 0;
 }
 
-/* --- Message Styling --- */
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.divider span {
+  padding: 0 1rem;
+}
+
+/* Social Login Buttons */
+.socialButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.socialBtn {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 3rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--text-primary);
+  background-color: var(--card-background);
+  background-repeat: no-repeat;
+  background-position: 1rem center;
+  background-size: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.socialBtn:hover {
+  border-color: var(--primary-color);
+}
+
+.googleBtn {
+  background-image: url('https://www.svgrepo.com/show/475656/google-color.svg');
+}
+
+.githubBtn {
+  background-image: url('https://www.svgrepo.com/show/512317/github-142.svg');
+  /* Invert icon for dark mode */
+  body.dark & {
+    background-image: url('https://www.svgrepo.com/show/341847/github.svg');
+  }
+}
+
+/* Message styling */
 .success {
   margin-top: 1rem;
-  color: #28a745;
+  color: var(--success-color);
 }
 
 .error {
   margin-top: 1rem;
-  color: #dc3545;
+  color: var(--danger-color);
 }

@@ -9,6 +9,7 @@ import ProtectedRoute from '../components/ProtectedRoute';
 import Navbar from '../components/Navbar';
 import { useEffect } from 'react';
 import RestoreLastRoute from '../components/RestoreLastRoute';
+import './index.css';
 
 
 function App() {

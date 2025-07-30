@@ -10,6 +10,7 @@ import {
 } from 'firebase/auth';
 import { useQuiz } from '../context/QuizContext';
 import styles from './StartPage.module.css';
+import Navbar from '../components/Navbar';
 
 function StartPage() {
   // const [msg, setMsg] = useState('');
@@ -110,7 +111,9 @@ function StartPage() {
     }
   }, [dispatch, navigate]);
   return (
-    <div className="page-center">
+    <><Navbar showLogout={false} />
+    <div className={styles.pageCenter}>
+      
       <div className={styles.container}>
         <h1 className={styles.title}>Welcome to Mind Pulse!</h1>
         <p className={styles.description}>
@@ -131,22 +134,31 @@ function StartPage() {
         {message && <p className={styles.success}>{message}</p>}
         {error && <p className={styles.error}>{error}</p>}
 
-        <div className="divider"><span>OR</span></div>
+        <div className={styles.divider}><span>OR</span></div>
 
         <div className={styles.socialButtons}>
-            <button onClick={() => handleSocialLogin(googleProvider)} className="social-btn google-btn">
+            <button 
+              onClick={() => handleSocialLogin(googleProvider)} 
+              className={`${styles.socialBtn} ${styles.googleBtn}`}
+            >
               Continue with Google
             </button>
-            <button onClick={() => handleSocialLogin(githubProvider)} className="social-btn github-btn">
+            <button 
+              onClick={() => handleSocialLogin(githubProvider)} 
+              className={`${styles.socialBtn} ${styles.githubBtn}`}
+            >
               Continue with GitHub
             </button>
-            <button onClick={handleGuestLogin} className="social-btn guest-btn" >
+            <button 
+              onClick={handleGuestLogin} 
+              className={styles.socialBtn} 
+            >
               Continue as Guest
             </button>
         </div>
       </div>
     </div>
+    </>
   );
 }
-
 export default StartPage;
