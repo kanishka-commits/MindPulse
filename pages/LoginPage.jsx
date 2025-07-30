@@ -1,3 +1,4 @@
+// Demo page, required in case of separate login
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, googleProvider, githubProvider } from '../src/firebaseConfig';

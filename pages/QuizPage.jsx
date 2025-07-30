@@ -1,26 +1,30 @@
-// src/pages/QuizPage.jsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
-function decodeHTMLEntities(text) {
-  const textarea = document.createElement('textarea');
-  textarea.innerHTML = text;
-  return textarea.value;
-}
+import styles from './QuizPage.module.css';
+import { decodeHTMLEntities, formatTime } from '../src/utils/helpers';
+import ConfirmLeaveModal from '../components/ConfirmLeaveModal';
+import { useRef } from 'react';
+import { flushSync } from 'react-dom';
 
 function QuizPage() {
+  const allowNavigationRef = useRef(false); // NEW: track if we allow leaving
+    // Define outside so it’s accessible
+  // const handlePopState = useCallback(() => {
+  //     setShowConfirm(true);
+  //     window.history.pushState(null, '', window.location.pathname);
+  // }, []);
   const navigate = useNavigate();
+  const [showConfirm, setShowConfirm] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [visited, setVisited] = useState([]);
   const [timeLeft, setTimeLeft] = useState(1800); // 30 minutes
+  const [loading, setLoading] = useState(true);
 
-  // Shuffle helper
-  const shuffle = (array) => array.sort(() => Math.random() - 0.5);
+  const shuffle = useMemo(() => (array) => [...array].sort(() => Math.random() - 0.5), []);
 
-  // Load saved quiz progress
   useEffect(() => {
     const savedData = localStorage.getItem('quizData');
     if (savedData) {
@@ -28,32 +32,27 @@ function QuizPage() {
       setQuestions(parsed.questions || []);
       setAnswers(parsed.answers || {});
       setCurrentQuestion(parsed.currentQuestion || 0);
-      setVisited(parsed.visited || []);
+      setVisited(parsed.visited || [0]);
       setTimeLeft(parsed.timeLeft || 1800);
+      setLoading(false);
     } else {
-      // Fetch new quiz if no saved data
-      axios.get('https://opentdb.com/api.php?amount=15').then((res) => {
-        const data = res.data.results.map((q) => ({
-          ...q,
-          all_answers: shuffle([...q.incorrect_answers, q.correct_answer])
-        }));
-        setQuestions(data);
-        // Save new quiz to localStorage
-        localStorage.setItem(
-          'quizData',
-          JSON.stringify({
-            questions: data,
-            answers: {},
-            currentQuestion: 0,
-            visited: [],
-            timeLeft: 1800
-          })
-        );
-      });
+      axios.get('https://opentdb.com/api.php?amount=15&type=multiple')
+        .then((res) => {
+          const formattedQuestions = res.data.results.map((q) => ({
+            ...q,
+            all_answers: shuffle([...q.incorrect_answers, q.correct_answer]),
+          }));
+          setQuestions(formattedQuestions);
+          setVisited([0]);
+          setLoading(false);
+        })
+        .catch(err => {
+          console.error("Failed to fetch questions:", err);
+          setLoading(false);
+        });
     }
-  }, []);
+  }, [shuffle]);
 
-  // Save progress on answers / question change
   useEffect(() => {
     if (questions.length > 0) {
       localStorage.setItem(
@@ -61,29 +60,71 @@ function QuizPage() {
         JSON.stringify({ questions, answers, currentQuestion, visited, timeLeft })
       );
     }
-  }, [answers, currentQuestion, visited, timeLeft]);
+  }, [questions, answers, currentQuestion, visited, timeLeft]);
 
-  // Mark question as visited
   useEffect(() => {
     if (!visited.includes(currentQuestion)) {
       setVisited((prev) => [...prev, currentQuestion]);
     }
-  }, [currentQuestion]);
+  }, [currentQuestion, visited]);
 
-  // Timer
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
-        const nextTime = prev - 1;
-        if (nextTime <= 0) {
+        if (prev <= 1) {
           clearInterval(timer);
           handleSubmit();
+          return 0;
         }
-        return nextTime;
+        return prev - 1;
       });
     }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+    const handlePopState = () => {
+      if (!allowNavigationRef.current) {
+        setShowConfirm(true);
+        window.history.pushState(null, '', window.location.pathname);
+      } else {
+        // navigate('/');
+      }
+    };
+  
+    window.history.pushState(null, '', window.location.pathname);
+    //initial push to block back
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
+  const handleConfirmLeave = () => {
+   flushSync(() => {
+     allowNavigationRef.current = true;
+     setShowConfirm(false);
+   })
+  
+    // ⏳ Short delay to allow history change to register
+    setTimeout(() => {
+      navigate('/', { replace: true });
+    }, 50);
+  };
+
+  const handleStay = () => {
+    setShowConfirm(false);
+  };
 
   const handleAnswer = (index, answer) => {
     setAnswers((prev) => ({ ...prev, [index]: answer }));
@@ -94,97 +135,96 @@ function QuizPage() {
     navigate('/report', { state: { questions, answers } });
   };
 
-  const formatTime = (seconds) => {
-    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
-    const s = (seconds % 60).toString().padStart(2, '0');
-    return `${m}:${s}`;
-  };
+  if (loading) return <div className={styles.loadingScreen}>Loading Quiz...</div>;
 
-  if (!questions.length) return <p>Loading questions...</p>;
+  const currentQ = questions[currentQuestion];
 
   return (
-    <div className="quiz-page" style={{ padding: '1rem' }}>
-      <div
-        className="quiz-header"
-        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-      >
-        <h2>🧠 Quiz Time</h2>
-        <div className="timer">⏱️ Time Left: {formatTime(timeLeft)}</div>
-      </div>
-
-      {/* Layout */}
-      <div
-        className="quiz-layout"
-        style={{ display: 'grid', gridTemplateColumns: '1fr 250px', gap: '2rem', marginTop: '1rem' }}
-      >
-        {/* Main Question Area */}
-        <div className="question-area">
-          <div className="question">
-            <h3>
-              Q{currentQuestion + 1}: {decodeHTMLEntities(questions[currentQuestion].question)}
-            </h3>
-            <ul>
-              {questions[currentQuestion].all_answers.map((option, i) => (
-                <li key={i}>
-                  <label>
-                    <input
-                      type="radio"
-                      name={`q${currentQuestion}`}
-                      value={option}
-                      checked={answers[currentQuestion] === option}
-                      onChange={() => handleAnswer(currentQuestion, option)}
-                    />
-                    {decodeHTMLEntities(option)}
-                  </label>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="navigation-buttons" style={{ marginTop: '1rem' }}>
-            <button disabled={currentQuestion === 0} onClick={() => setCurrentQuestion((q) => q - 1)}>
-              Previous
-            </button>
-            <button
-              disabled={currentQuestion === questions.length - 1}
-              onClick={() => setCurrentQuestion((q) => q + 1)}
-            >
-              Next
-            </button>
-            <button onClick={handleSubmit}>Submit Quiz</button>
-          </div>
+    <div className={styles.quizPage}>
+      <div className={styles.quizContainer}>
+        <div className={styles.quizHeader}>
+          <h2 className={styles.title}>Mind Pulse Quiz</h2>
+          <div className={styles.timer}>⏱️ {formatTime(timeLeft)}</div>
         </div>
 
-        {/* Question Overview Panel */}
-        <div className="navigation-panel" style={{ borderLeft: '1px solid #ccc', paddingLeft: '1rem' }}>
-          <h4>Question Overview</h4>
-          <div
-            className="overview-grid"
-            style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}
-          >
-            {questions.map((_, i) => (
+        <div className={styles.quizLayout}>
+          <div className={styles.questionArea}>
+            {currentQ && (
+              <div className={styles.questionCard}>
+                <h3 className={styles.questionText}>
+                  <span>Q{currentQuestion + 1}:</span> {decodeHTMLEntities(currentQ.question)}
+                </h3>
+                <ul className={styles.optionsList}>
+                  {currentQ.all_answers.map((option, i) => (
+                    <li key={i}>
+                      <label className={styles.optionLabel}>
+                        <input
+                          type="radio"
+                          name={`q${currentQuestion}`}
+                          value={option}
+                          checked={answers[currentQuestion] === option}
+                          onChange={() => handleAnswer(currentQuestion, option)}
+                        />
+                        <span>{decodeHTMLEntities(option)}</span>
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <div className={styles.navigationButtons}>
               <button
-                key={i}
-                style={{
-                  backgroundColor: answers[i]
-                    ? '#90ee90'
-                    : visited.includes(i)
-                    ? '#f0e68c'
-                    : '#f8f8f8',
-                  border: '1px solid #ccc',
-                  padding: '0.5rem',
-                  cursor: 'pointer'
-                }}
-                onClick={() => setCurrentQuestion(i)}
+                className={styles.navButton}
+                disabled={currentQuestion === 0}
+                onClick={() => setCurrentQuestion((q) => q - 1)}
               >
-                {i + 1}
+                Previous
               </button>
-            ))}
+              <button className={styles.submitButton} onClick={handleSubmit}>
+                Submit Quiz
+              </button>
+              <button
+                className={styles.navButton}
+                disabled={currentQuestion === questions.length - 1}
+                onClick={() => setCurrentQuestion((q) => q + 1)}
+              >
+                Next
+              </button>
+            </div>
+          </div>
+
+          <div className={styles.navigationPanel}>
+            <h4 className={styles.panelTitle}>Question Overview</h4>
+            <div className={styles.overviewGrid}>
+              {questions.map((_, i) => (
+                <button
+                  key={i}
+                  className={`
+                    ${styles.overviewButton}
+                    ${answers[i] ? styles.answered : ''}
+                    ${!answers[i] && visited.includes(i) ? styles.visited : ''}
+                    ${currentQuestion === i ? styles.current : ''}
+                  `}
+                  onClick={() => setCurrentQuestion(i)}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
+
+      {showConfirm && (
+        <ConfirmLeaveModal
+          onConfirm={handleConfirmLeave}
+          onCancel={handleStay}
+        />
+      )}
     </div>
   );
 }
 
 export default QuizPage;
+

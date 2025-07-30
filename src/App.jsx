@@ -7,16 +7,24 @@ import RegisterPage from '../pages/RegisterPage';
 import ReportPage from '../pages/ReportPage';
 import ProtectedRoute from '../components/ProtectedRoute';
 import Navbar from '../components/Navbar';
+import { useEffect } from 'react';
+import RestoreLastRoute from '../components/RestoreLastRoute';
+
 
 function App() {
   const location = useLocation(); 
+    // Store route changes
+    useEffect(() => {
+      localStorage.setItem('lastVisitedPath', location.pathname);
+    }, [location.pathname]);
   return (
     <QuizProvider>
       <div className="app-container">
       {!['/', '/login', '/register'].includes(location.pathname) && <Navbar />}
-        <Routes>
         
-
+        
+        <RestoreLastRoute />
+        <Routes>
           <Route path="/" element={<StartPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />

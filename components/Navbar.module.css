@@ -1,32 +1,94 @@
+/* Main navbar container */
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: var(--bg-color, #f5f5f5);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .brand {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-  
-  .actions {
-    display: flex;
-    gap: 1rem;
-  }
-  
-  .navButton {
-    background-color: #222;
-    color: white;
-    border: none;
-    padding: 0.6rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .navButton:hover {
-    background-color: #444;
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* Brand/logo styling */
+.brand {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #343a40;
+}
+
+/* Container for action buttons */
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
+/* General button styling */
+.navButton {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  background-color: #f8f9fa;
+  color: #495057;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.navButton:hover {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+}
+
+/* Specific styling for the logout button */
+.logoutButton {
+  background-color: #fff0f1;
+  border-color: #ffb3b8;
+  color: #dc3545;
+}
+
+.logoutButton:hover {
+  background-color: #ffe6e8;
+  border-color: #ff8fa3;
+}
+
+/* --- Dark Mode Styles --- */
+/* You would add this to a global CSS file like index.css */
+/*
+body.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+.dark-mode .navbar {
+  background-color: #1e1e1e;
+  border-bottom-color: #333;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode .brand {
+  color: #ffffff;
+}
+
+.dark-mode .navButton {
+  background-color: #333;
+  border-color: #555;
+  color: #e0e0e0;
+}
+
+.dark-mode .navButton:hover {
+  background-color: #444;
+  border-color: #777;
+}
+
+.dark-mode .logoutButton {
+  background-color: #4a2529;
+  border-color: #a13d47;
+  color: #ffb3b8;
+}
+
+.dark-mode .logoutButton:hover {
+  background-color: #5e3036;
+  border-color: #c75e6a;
+}
+*/

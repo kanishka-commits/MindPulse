@@ -10,24 +10,24 @@ function Navbar() {
   const handleLogout = () => {
     // Clear all authentication & quiz-related data
     localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem('userEmail');
     localStorage.removeItem('guest');
-    localStorage.removeItem('quizState'); // if you're storing it
-    localStorage.removeItem('answers');   // if answers are persisted
-    localStorage.removeItem('currentQuestion'); // if tracked
-
-    // Reset context
+    localStorage.removeItem('quizData'); // Clear the saved quiz progress
+    localStorage.removeItem('lastVisitedPath');
+    // Reset context state
     dispatch({ type: 'RESET_QUIZ' });
 
-    // Navigate to home/login
+    // Navigate to home/login page
     navigate('/');
   };
 
   const toggleDarkMode = () => {
-    document.body.classList.toggle('dark');
+    // Toggles 'dark-mode' class on the body
+    document.body.classList.toggle('dark-mode');
+    // Persist theme preference
     localStorage.setItem(
       'theme',
-      document.body.classList.contains('dark') ? 'dark' : 'light'
+      document.body.classList.contains('dark-mode') ? 'dark' : 'light'
     );
   };
 
@@ -37,10 +37,10 @@ function Navbar() {
 
       <div className={styles.actions}>
         <button onClick={toggleDarkMode} className={styles.navButton}>
-          Toggle Dark Mode
+          Toggle Theme
         </button>
 
-        <button onClick={handleLogout} className={styles.navButton}>
+        <button onClick={handleLogout} className={`${styles.navButton} ${styles.logoutButton}`}>
           Logout
         </button>
       </div>
@@ -49,25 +49,3 @@ function Navbar() {
 }
 
 export default Navbar;
-
-
-// import React from 'react'
-
-// const Navbar = () => {
-//   return (
-//     <>
-//     <button
-//         onClick={() => {
-//             localStorage.removeItem('token'); // if also removing login token
-//             localStorage.removeItem('guest');
-//             navigate('/'); // redirect to homepage or login
-//         }}
-//         >
-//         Logout
-//     </button>
-
-//     </>
-//   )
-// }
-
-// export default Navbar

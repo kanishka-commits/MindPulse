@@ -1,0 +1,230 @@
+/* Main page container */
+.quizPage {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align to top */
+    min-height: 100vh;
+    padding: 2rem;
+    background-color: #f0f2f5;
+    box-sizing: border-box;
+  }
+  
+  .loadingScreen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-size: 1.5rem;
+    color: #555;
+  }
+  
+  /* The main white card holding the quiz */
+  .quizContainer {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+    padding: 2rem 2.5rem;
+    width: 100%;
+    max-width: 1200px;
+    border-top: 5px solid #6c63ff; /* Accent color */
+  }
+  
+  /* Header with title and timer */
+  .quizHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  .title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #343a40;
+    margin: 0;
+  }
+  
+  .timer {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #343a40;
+    background-color: #f8f9fa;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+  }
+  
+  /* Two-column layout for the quiz content */
+  .quizLayout {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 2.5rem;
+  }
+  
+  /* --- Question Area (Left Column) --- */
+  .questionArea {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .questionCard {
+    flex-grow: 1;
+  }
+  
+  .questionText {
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: #212529;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+  
+  .questionText span {
+    font-weight: 700;
+    color: #6c63ff;
+    margin-right: 0.5rem;
+  }
+  
+  /* Options List */
+  .optionsList {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  /* Custom Radio Button Styling */
+  .optionLabel {
+    display: block;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-size: 1rem;
+  }
+  
+  .optionLabel input[type="radio"] {
+    display: none; /* Hide the default radio button */
+  }
+  
+  .optionLabel:hover {
+    border-color: #6c63ff;
+    background-color: #f1f0ff;
+  }
+  
+  /* Style for the selected option */
+  .optionLabel input[type="radio"]:checked + span {
+    font-weight: 600;
+    color: #6c63ff;
+  }
+  
+  .optionLabel input[type="radio"]:checked + span::before {
+    content: '✔';
+    margin-right: 0.75rem;
+    color: #28a745;
+  }
+  
+  /* --- Navigation Buttons --- */
+  .navigationButtons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e9ecef;
+  }
+  
+  .navButton, .submitButton {
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .navButton {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  .navButton:disabled {
+    background-color: #ced4da;
+    cursor: not-allowed;
+  }
+  
+  .submitButton {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .submitButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+  }
+  
+  /* --- Overview Panel (Right Column) --- */
+  .navigationPanel {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    align-self: start; /* Stick to the top */
+  }
+  
+  .panelTitle {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #343a40;
+    text-align: center;
+  }
+  
+  .overviewGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+    gap: 0.75rem;
+  }
+  
+  .overviewButton {
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 0.75rem 0;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+  
+  .overviewButton:hover {
+    transform: translateY(-2px);
+    border-color: #6c63ff;
+  }
+  
+  /* Status colors for overview buttons */
+  .overviewButton.answered {
+    background-color: #d4edda; /* Light green */
+    border-color: #28a745;
+    color: #155724;
+  }
+  
+  .overviewButton.visited {
+    background-color: #fff3cd; /* Light yellow */
+    border-color: #ffc107;
+    color: #856404;
+  }
+  
+  .overviewButton.current {
+    background-color: #6c63ff;
+    color: white;
+    border-color: #6c63ff;
+    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.4);
+  }
+  
