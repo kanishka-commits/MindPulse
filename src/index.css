@@ -1,111 +1,77 @@
+/* src/index.css */
+
 /* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+/* --- GLOBAL THEME VARIABLES --- */
 :root {
-  --primary-color: #007bff;
-  --primary-hover: #0056b3;
-  --secondary-color: #6c757d;
-  --secondary-hover: #5a6268;
-  --text-color: #1f2937;
-  --light-text: #6b7280;
-  --background-color: #f7f9fc;
-  --border-color: #e5e7eb;
-  --font-family: 'Inter', sans-serif;
-  --border-radius: 8px;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
+  /* Colors */
+  --primary-color: #FF7900; 
+  --accent-color: #FFBF00; 
+  --success-color: #28a745; /* Standard Green for UX */
+  --danger-color: #e53e3e; /* Standard Red for UX */
+  --warning-color: #FFBF00; 
 
+  /* Backgrounds */
+  --background-color: #FFFBF2; /* Derived from #F2CF7E */
+  --card-background: #ffffff;
+  --button-background: #F2CF7E; 
+  --success-bg: #d4edda;
+  --danger-bg: #f8d7da;
+  --warning-bg: #fff3cd;
+
+  /* Text */
+  --text-primary: #4d3200; /* Dark brown for warmth */
+  --text-secondary: #8c6d3f;
+  --text-on-primary: #ffffff;
+
+  /* Borders & Dividers */
+  --border-color: #F2CF7E; 
+  --shadow-color: rgba(140, 109, 63, 0.12);
+
+  /* Navbar Specific - Glassmorphism Effect */
+  --nav-background: rgba(255, 251, 242, 0.8);
+  --nav-border: rgba(242, 207, 126, 0.5);
+
+  /* Font */
+  --font-family: 'Inter', sans-serif;
+}
+body.dark {
+  /* Dark Mode Colors */
+  --primary-color: #FFE642; 
+  --accent-color: #FF7900; 
+  --success-color: #68d391; /* Brighter Green for contrast */
+  --danger-color: #fc8181; /* Brighter Red for contrast */
+  --warning-color: #FFBF00; 
+
+  /* Dark Mode Backgrounds */
+  --background-color: #1a140d;
+  --card-background: #2a2118;
+  --button-background: #4d3200;
+  --success-bg: #2a4336;
+  --danger-bg: #4c3032;
+  --warning-bg: #4a4021;
+
+  /* Dark Mode Text */
+  --text-primary: #FFFBF2;
+  --text-secondary: #bca98f;
+  --text-on-primary: #4d3200; /* Dark text on light primary color */
+
+  /* Dark Mode Borders & Dividers */
+  --border-color: #4d3200;
+  --shadow-color: rgba(0, 0, 0, 0.2);
+
+  /* Dark Mode Navbar */
+  --nav-background: rgba(42, 33, 24, 0.8);
+  --nav-border: #4d3200;
+}
+/* --- GLOBAL BASE STYLES --- */
 body {
   margin: 0;
   font-family: var(--font-family);
   background-color: var(--background-color);
-  color: var(--text-color);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-/* Optional Dark Mode */
-body.dark {
-  background-color: #121212;
-  color: #f0f0f0;
-}
-
-/* Reusable Page Wrapper */
-.page-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background-color: var(--background-color);
-}
-
-/* Reusable Primary Button */
-.btn {
-  padding: 0.75rem 1.5rem;
-  font-weight: bold;
-  cursor: pointer;
-  border: none;
-  border-radius: var(--border-radius);
-  transition: background-color 0.2s ease-in-out;
-  font-family: var(--font-family);
-}
-
-.btn-primary {
-  background-color: var(--primary-color);
-  color: white;
-}
-.btn-primary:hover {
-  background-color: var(--primary-hover);
-}
-
-/* Divider */
-.divider {
-  display: flex;
-  align-items: center;
-  text-align: center;
-  color: var(--light-text);
-  margin: 2rem 0;
-}
-.divider::before,
-.divider::after {
-  content: '';
-  flex: 1;
-  border-bottom: 1px solid var(--border-color);
-}
-.divider span {
-  padding: 0 1rem;
-}
-
-/* Social Buttons (Base Styling) */
-.social-btn {
-  display: inline-block;
-  width: 100%;
-  padding: 0.75rem 1rem 0.75rem 3rem;
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  font-size: 1rem;
-  font-weight: 600;
-  text-align: center;
-  color: var(--text-color);
-  background-color: white;
-  background-repeat: no-repeat;
-  background-position: 1rem center;
-  background-size: 1.25rem;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  margin-bottom: 0.5rem;
-}
-.social-btn:hover {
-  background-color: #f8f9fa;
-  border-color: var(--light-text);
-}
-.google-btn {
-  background-image: url('https://www.svgrepo.com/show/475656/google-color.svg');
-}
-.github-btn {
-  background-image: url('https://www.svgrepo.com/show/512317/github-142.svg');
-}
-.guest-btn {
-  background-image: none;
 }
