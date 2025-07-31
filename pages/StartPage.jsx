@@ -66,11 +66,11 @@ function StartPage() {
     try {
       await sendSignInLinkToEmail(auth, email, actionCodeSettings);
       localStorage.setItem('emailForSignIn', email);
-      setMessage(`Sign-in link sent to ${email}. Please check your inbox.`);
+      setMessage(`Sign-in link sent to ${email}. Please check your inbox - including spam.`);
     } catch (err) {
       console.error('Error Code:', err.code);
       console.error('Error Message:', err.message);
-      setError(`Failed to send link: ${err.message}`);
+      setError('Failed to send link. Please check the email and try again.');
     }
   };
   // --- Effect to handle user returning from email link ---
@@ -85,7 +85,7 @@ function StartPage() {
         localStorage.setItem('token', await result.user.getIdToken());
         localStorage.setItem('userEmail', userEmail);
         
-        // 4. Removed redundant RESET_QUIZ dispatch
+        // Removed redundant RESET_QUIZ dispatch
         dispatch({ type: 'START_QUIZ', payload: userEmail });
         navigate('/quiz');
       } catch (err) {
