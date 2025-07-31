@@ -61,8 +61,9 @@ function StartPage() {
     const actionCodeSettings = {
       // URL you want to redirect back to. The domain (www.example.com) must be authorized
       // in the Firebase Console.
-      url: window.location.origin, // Redirect to the base URL
+      url: `${window.location.origin}/verify`,
       handleCodeInApp: true,
+      
     };
 
     try {
