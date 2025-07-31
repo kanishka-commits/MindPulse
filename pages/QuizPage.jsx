@@ -152,11 +152,11 @@ function QuizPage() {
       return;
     }
     
-    // ✅ 1. Save the report data to sessionStorage first
+    // Save the report data to sessionStorage first
     const reportData = { questions, answers };
     sessionStorage.setItem('quizReportData', JSON.stringify(reportData));
   
-    // 2. Now, navigate to the report page
+    // navigate to the report page
     allowNavigationRef.current = true; 
     localStorage.removeItem('quizData'); // Clean up the active quiz
     navigate('/report', { state: reportData });

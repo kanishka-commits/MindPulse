@@ -19,7 +19,7 @@
   align-items: center;
   height: 100dvh; /* Safe for mobile browsers */
 
-  font-size: 2rem;
+  font-size: 1rem;
   color: var(--text-secondary);
 }
 
@@ -43,7 +43,7 @@
 }
 
 .title {
-  font-size: 3rem;
+  font-size: 1rem;
   font-style: italic;
   font-weight: 700;
   color: var(--text-primary);
@@ -51,7 +51,7 @@
 }
 
 .timer {
-  font-size: 2rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--text-primary);
   background-color: var(--background-color);
@@ -67,7 +67,7 @@
 }
 
 .questionText {
-  font-size: 1.7rem;
+  font-size: 1.2rem;
   font-weight: 500;
   color: var(--text-primary);
   margin-bottom: 2rem;
@@ -96,7 +96,7 @@
   padding: 1rem;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  font-size: 1.5rem;
+  font-size: 1rem;
 }
 
 .optionLabel input[type="radio"] {
@@ -132,7 +132,7 @@
   padding: 12px 24px;
   border-radius: 8px;
   border: none;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -164,7 +164,7 @@
 .panelTitle {
   margin-top: 0;
   margin-bottom: 1.5rem;
-  font-size: 1.3rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--text-primary);
   text-align: center;
@@ -239,7 +239,7 @@
 
 .title {
   /* Slightly smaller base font size */
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: var(--text-primary);
   margin: 0;
@@ -286,7 +286,7 @@
 
   .title {
     /* Restore original font size */
-    font-size: 1.8rem;
+    font-size: 1.2rem;
   }
 
   .quizLayout {

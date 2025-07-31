@@ -35,7 +35,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--text-primary);
   transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
@@ -86,7 +86,7 @@
 }
 
 .buttonText {
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 600;
   color: inherit;
   transition: color 0.3s ease;
@@ -113,7 +113,7 @@
     padding: 0.75rem 1.25rem;
   }
   .brand {
-    font-size: 1.25rem;
+    font-size: 1rem;
   }
   .buttonText {
     display: none;
