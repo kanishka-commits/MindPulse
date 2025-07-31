@@ -22,21 +22,22 @@
 
 ## 📂 Folder Structure
 
+```
 src/
 ├── components/
-│ ├── ConfirmLeaveModal.jsx
-│ ├── Navbar.jsx
-│ └── ProtectedRoute.jsx
+│   ├── ConfirmLeaveModal.jsx
+│   ├── Navbar.jsx
+│   └── ProtectedRoute.jsx
 ├── pages/
-│ ├── StartPage.jsx
-│ ├── QuizPage.jsx
-│ └── ReportPage.jsx
+│   ├── StartPage.jsx
+│   ├── QuizPage.jsx
+│   └── ReportPage.jsx
 ├── context/
-│ └── QuizContext.jsx
+│   └── QuizContext.jsx
 ├── firebaseConfig.js
 ├── App.jsx
 └── index.js
-
+```
 
 ---
 
