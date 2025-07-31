@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next"
 import { Routes, Route, useLocation  } from 'react-router-dom';
 import { QuizProvider } from '../context/QuizContext';
 import StartPage from '../pages/StartPage';
@@ -50,6 +51,7 @@ function App() {
           <Route path="*" element={<StartPage />} />
         </Routes>
       </div>
+      <Analytics />
     </QuizProvider>
   );
 }
