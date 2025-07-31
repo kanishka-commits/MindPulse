@@ -1,4 +1,4 @@
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/react"
 import { Routes, Route, useLocation  } from 'react-router-dom';
 import { QuizProvider } from '../context/QuizContext';
 import StartPage from '../pages/StartPage';
