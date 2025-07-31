@@ -27,7 +27,9 @@ src/
 ├── components/
 │   ├── ConfirmLeaveModal.jsx
 │   ├── Navbar.jsx
-│   └── ProtectedRoute.jsx
+│   ├── ProtReportRoute.jsx
+│   ├── RestoreLastRoute.jsx
+│   └── ProtQuizRoute.jsx
 ├── pages/
 │   ├── StartPage.jsx
 │   ├── QuizPage.jsx
