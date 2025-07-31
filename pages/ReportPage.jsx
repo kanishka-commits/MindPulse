@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styles from './ReportPage.module.css';
 
-// Helper to decode HTML entities
+// Helper to decode HTML entities (no changes needed)
 const decodeHTMLEntities = (text) => {
   if (!text) return '';
   const textarea = document.createElement('textarea');
@@ -11,20 +11,16 @@ const decodeHTMLEntities = (text) => {
   return textarea.value;
 };
 
-// --- Sub-components for better structure and readability ---
-
-/**
- * Displays the final score with a visual progress ring.
- */
+// --- Sub-components (no changes needed) ---
 const ScoreSummary = ({ score, total }) => {
   const percentage = total > 0 ? (score / total) * 100 : 0;
-  const circumference = 2 * Math.PI * 45; // 2 * pi * radius
+  const circumference = 2 * Math.PI * 45;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
   return (
     <div className={styles.scoreSection}>
       <div className={styles.progressRing}>
-        <svg className={styles.progressRingSvg} width="120" height="120">
+        <svg className={styles.progressRingSvg} viewBox="0 0 120 120">
           <circle className={styles.progressRingBg} strokeWidth="8" r="45" cx="60" cy="60" />
           <circle
             className={styles.progressRingFg}
@@ -43,32 +39,22 @@ const ScoreSummary = ({ score, total }) => {
     </div>
   );
 };
-ScoreSummary.propTypes = {
-  score: PropTypes.number.isRequired,
-  total: PropTypes.number.isRequired,
-};
+ScoreSummary.propTypes = { score: PropTypes.number.isRequired, total: PropTypes.number.isRequired };
 
-/**
- * A memoized component for rendering each question's review block.
- */
 const QuestionReview = React.memo(({ question, userAnswer, index }) => {
   const isUnanswered = userAnswer === null || userAnswer === undefined;
-
   return (
     <div className={styles.questionBlock}>
       <h4 className={styles.questionText}>
         <span>Q{index + 1}:</span> {decodeHTMLEntities(question.question)}
       </h4>
-
       <ul className={styles.optionsList}>
         {question.all_answers.map((option) => {
           const isCorrect = option === question.correct_answer;
           const isSelected = userAnswer === option;
-
           let optionClass = styles.normal;
           if (isCorrect) optionClass = styles.correct;
           else if (isSelected) optionClass = styles.incorrect;
-
           return (
             <li key={option} className={optionClass}>
               {decodeHTMLEntities(option)}
@@ -78,50 +64,54 @@ const QuestionReview = React.memo(({ question, userAnswer, index }) => {
           );
         })}
       </ul>
-
       {isUnanswered && <p className={styles.unanswered}>⚠️ You did not answer this question.</p>}
     </div>
   );
 });
-QuestionReview.propTypes = {
-  question: PropTypes.object.isRequired,
-  userAnswer: PropTypes.string,
-  index: PropTypes.number.isRequired,
-};
+QuestionReview.propTypes = { question: PropTypes.object.isRequired, userAnswer: PropTypes.string, index: PropTypes.number.isRequired };
 QuestionReview.displayName = 'QuestionReview';
 
-/**
- * Renders a message when no quiz data is available.
- */
 const NoData = ({ onGoHome }) => (
   <div className={styles.reportPage}>
     <div className={styles.reportContainer}>
       <h2 className={styles.header}>⚠️ No Quiz Data Available</h2>
       <p>It seems you've navigated here directly without completing a quiz.</p>
-      <button onClick={onGoHome} className={styles.homeButton}>
-        Go Back to Home
-      </button>
+      <button onClick={onGoHome} className={styles.homeButton}>Go Back to Home</button>
     </div>
   </div>
 );
-NoData.propTypes = {
-  onGoHome: PropTypes.func.isRequired,
-};
+NoData.propTypes = { onGoHome: PropTypes.func.isRequired };
 
 // --- Main ReportPage Component ---
 
 function ReportPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { questions, answers } = location.state || { questions: [], answers: {} };
+
+  // **MODIFICATION**: Read from state OR fallback to sessionStorage
+  const reportData = useMemo(() => {
+    if (location.state) {
+      return location.state; // Use data from initial navigation
+    }
+    const storedData = sessionStorage.getItem('quizReportData');
+    return storedData ? JSON.parse(storedData) : null;
+  }, [location.state]);
+
+  const { questions, answers } = reportData || { questions: [], answers: {} };
 
   const score = useMemo(() => {
     if (!questions || !answers) return 0;
     return questions.reduce((acc, q, i) => acc + (answers[i] === q.correct_answer ? 1 : 0), 0);
   }, [questions, answers]);
 
+  // **MODIFICATION**: Update the "Play Again" handler
+  const handlePlayAgain = () => {
+    sessionStorage.removeItem('quizReportData'); // Clean up storage
+    navigate('/');
+  };
+
   if (!questions || questions.length === 0) {
-    return <NoData onGoHome={() => navigate('/')} />;
+    return <NoData onGoHome={handlePlayAgain} />;
   }
 
   return (
@@ -129,21 +119,19 @@ function ReportPage() {
       <div className={styles.reportContainer}>
         <h2 className={styles.header}>📋 Quiz Report</h2>
         <ScoreSummary score={score} total={questions.length} />
-
         <div className={styles.reviewSection}>
           <h3 className={styles.reviewHeader}>Review Your Answers</h3>
           {questions.map((q, i) => (
             <QuestionReview
-              key={q.question} // Using question text as key; a unique ID would be better
+              key={q.question}
               question={q}
               userAnswer={answers[i]}
               index={i}
             />
           ))}
         </div>
-
         <div className={styles.footer}>
-          <button onClick={() => navigate('/')} className={styles.homeButton}>
+          <button onClick={handlePlayAgain} className={styles.homeButton}>
             🏠 Play Again
           </button>
         </div>

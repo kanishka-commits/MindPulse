@@ -9,11 +9,6 @@ import { flushSync } from 'react-dom';
 
 function QuizPage() {
   const allowNavigationRef = useRef(false); // NEW: track if we allow leaving
-    // Define outside so it’s accessible
-  // const handlePopState = useCallback(() => {
-  //     setShowConfirm(true);
-  //     window.history.pushState(null, '', window.location.pathname);
-  // }, []);
   const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
   const [questions, setQuestions] = useState([]);
@@ -24,7 +19,21 @@ function QuizPage() {
   const [loading, setLoading] = useState(true);
 
   const shuffle = useMemo(() => (array) => [...array].sort(() => Math.random() - 0.5), []);
+  const [isBlocking, setIsBlocking] = useState(true);
 
+
+  // 🔐 Prompt on tab close/refresh
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (isBlocking) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [isBlocking]);
   useEffect(() => {
     const savedData = localStorage.getItem('quizData');
     if (savedData) {
@@ -82,45 +91,47 @@ function QuizPage() {
     return () => clearInterval(timer);
   }, []);
 
-
-
   useEffect(() => {
-    const handleBeforeUnload = (e) => {
-      e.preventDefault();
-      e.returnValue = '';
-    };
+    // Block the back button initially
+    window.history.pushState(null, '', window.location.pathname);
+  
     const handlePopState = () => {
       if (!allowNavigationRef.current) {
         setShowConfirm(true);
-        window.history.pushState(null, '', window.location.pathname);
-      } else {
-        // navigate('/');
+        // ❌ Don't re-push to history here — it cancels real navigation
       }
     };
   
-    window.history.pushState(null, '', window.location.pathname);
-    //initial push to block back
+    const handleBeforeUnload = (e) => {
+      if (!allowNavigationRef.current) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+  
     window.addEventListener('beforeunload', handleBeforeUnload);
-
     window.addEventListener('popstate', handlePopState);
-
+  
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
       window.removeEventListener('popstate', handlePopState);
     };
   }, []);
+  
+
 
   const handleConfirmLeave = () => {
-   flushSync(() => {
-     allowNavigationRef.current = true;
-     setShowConfirm(false);
-   })
+    localStorage.setItem('skipRestore', 'true'); // prevent immediate redirect back
+    allowNavigationRef.current = true;
+    setShowConfirm(false);
   
-    // ⏳ Short delay to allow history change to register
     setTimeout(() => {
       navigate('/', { replace: true });
     }, 50);
   };
+  
+  
+  
 
   const handleStay = () => {
     setShowConfirm(false);
@@ -131,6 +142,7 @@ function QuizPage() {
   };
 
   const handleSubmit = () => {
+    allowNavigationRef.current = true; 
     localStorage.removeItem('quizData');
     navigate('/report', { state: { questions, answers } });
   };
@@ -227,4 +239,3 @@ function QuizPage() {
 }
 
 export default QuizPage;
-

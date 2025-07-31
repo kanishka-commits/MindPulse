@@ -5,7 +5,7 @@
   justify-content: center;
   align-items: flex-start;
   min-height: 100vh;
-  padding: 2rem 1rem;
+  padding: 3rem 1rem; /* Generous padding for desktop */
   background-color: var(--background-color);
   box-sizing: border-box;
 }
@@ -14,14 +14,14 @@
   background: var(--card-background);
   border-radius: 16px;
   box-shadow: 0 8px 30px var(--shadow-color);
-  padding: 2rem;
+  padding: 2.5rem; /* More spacious padding for desktop */
   width: 100%;
   max-width: 800px;
   border-top: 6px solid var(--primary-color);
 }
 
 .header {
-  font-size: 2rem;
+  font-size: 2.25rem; /* Larger for more impact on desktop */
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 2rem;
@@ -49,6 +49,7 @@
 
 .homeButton:hover {
   transform: translateY(-3px);
+  box-shadow: 0 4px 15px var(--shadow-color);
 }
 
 .scoreSection {
@@ -127,6 +128,11 @@
   border-radius: 12px;
   padding: 1.5rem;
   background-color: var(--card-background);
+  transition: box-shadow 0.3s ease;
+}
+
+.questionBlock:hover {
+  box-shadow: 0 4px 15px var(--shadow-color);
 }
 
 .questionText {
@@ -141,6 +147,15 @@
   font-weight: 700;
   color: var(--primary-color);
   margin-right: 0.5rem;
+}
+
+.optionsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .optionsList li {
@@ -180,9 +195,52 @@
   font-size: 0.9rem;
 }
 
+/* --- RESPONSIVE STYLES --- */
+
+/* For tablets and smaller devices */
 @media (max-width: 768px) {
-  .reportContainer { padding: 1.5rem; }
-  .header { font-size: 1.75rem; }
-  .score { font-size: 1.1rem; }
-  .questionText { font-size: 1rem; }
+  .reportPage {
+    padding: 2rem 2rem;
+  }
+  .reportContainer {
+    padding: 2rem;
+  }
+  .header {
+    font-size: 1.75rem;
+  }
+  .score {
+    font-size: 1.1rem;
+  }
+  .questionText {
+    font-size: 1rem;
+  }
+}
+
+/* For small mobile phones */
+@media (max-width: 480px) {
+  .reportPage {
+    padding: 2rem 2rem;
+  }
+  .reportContainer {
+    padding: 1rem;
+  }
+  .header {
+    font-size: 1.5rem;
+  }
+  .progressRing {
+    /* Use Grid for robust centering and layering */
+    display: grid;
+    place-items: center; /* This centers items both horizontally and vertically */
+    
+    /* Keep your responsive width/height */
+    position: relative; /* Can be useful for pseudo-elements, but not for centering here */
+    width: 120px;
+    height: 120px;
+  }
+  .progressRingText {
+    font-size: 1.25rem;
+  }
+  .questionBlock {
+    padding: 1.5rem;
+  }
 }

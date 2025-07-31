@@ -204,3 +204,110 @@
   color: var(--text-on-primary);
   border-color: var(--primary-color);
 }
+
+/* --- MODIFIED DEFAULT STYLES (for Mobile-First) --- */
+
+.quizPage {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  /* Reduced padding for smaller screens */
+  padding: 1rem;
+  background-color: var(--background-color);
+  box-sizing: border-box;
+}
+
+.quizContainer {
+  background: var(--card-background);
+  border-radius: 12px;
+  box-shadow: 0 6px 24px var(--shadow-color);
+  /* Adjusted padding for smaller screens */
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 1200px;
+  border-top: 5px solid var(--primary-color);
+}
+
+.quizHeader {
+  display: flex;
+  /* Allow header items to stack on very small screens */
+  flex-wrap: wrap; 
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  gap: 1rem; /* Adds space when items wrap */
+}
+
+.title {
+  /* Slightly smaller base font size */
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.quizLayout {
+  display: grid;
+  /* Make it a single column by default */
+  grid-template-columns: 1fr; 
+  gap: 2.5rem;
+}
+
+.navigationButtons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+  /* Allow buttons to wrap on narrow screens */
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.submitButton {
+  /* Ensure submit button takes full width if it wraps to a new line */
+  flex-grow: 1;
+  text-align: center;
+}
+
+
+/* --- ADD THIS MEDIA QUERY FOR LARGER SCREENS --- */
+
+@media (min-width: 992px) {
+  .quizPage {
+    /* Restore original padding */
+    padding: 2rem;
+  }
+
+  .quizContainer {
+    /* Restore original padding */
+    padding: 2rem 2.5rem;
+  }
+
+  .title {
+    /* Restore original font size */
+    font-size: 1.8rem;
+  }
+
+  .quizLayout {
+    /* Re-introduce the two-column grid on screens 992px and wider */
+    grid-template-columns: 1fr 280px;
+  }
+
+  .navigationPanel {
+    /* The navigation panel is part of the grid, no extra styles needed here */
+    /* but this confirms it's only for desktop */
+  }
+
+  .submitButton {
+    /* Revert flex-grow for side-by-side layout */
+    flex-grow: 0;
+  }
+}
+
+/* --- No changes needed for the following classes, they are already responsive! --- */
+/* .optionsList, .overviewGrid, .optionLabel, .navButton, etc. */

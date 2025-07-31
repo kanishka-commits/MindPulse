@@ -7,14 +7,19 @@ function RestoreLastRoute() {
 
   useEffect(() => {
     const lastPath = localStorage.getItem('lastVisitedPath');
+    const skipRestore = localStorage.getItem('skipRestore'); // new flag
 
-    // Only restore if current path is `/` (StartPage) and last path was something else
-    if (location.pathname === '/' && lastPath && lastPath !== '/') {
+    if (location.pathname === '/' && lastPath && lastPath !== '/' && !skipRestore) {
       navigate(lastPath, { replace: true });
+    } else {
+      // Clear the skip flag after using it once
+      if (skipRestore) {
+        localStorage.removeItem('skipRestore');
+      }
     }
   }, [location.pathname, navigate]);
 
-  return null; // This component doesn't render anything
+  return null;
 }
 
 export default RestoreLastRoute;
