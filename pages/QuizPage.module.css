@@ -4,18 +4,22 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  min-height: 100vh;
-  padding: 2rem;
+  min-height: 100dvh; /* Safe for mobile */
+  padding: 1rem;
   background-color: var(--background-color);
   box-sizing: border-box;
+  overflow-x: hidden; /* Fix for horizontal scroll */
+  overflow-y: auto;   /* Allow internal scroll if needed */
 }
+
 
 .loadingScreen {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  font-size: 1.5rem;
+  height: 100dvh; /* Safe for mobile browsers */
+
+  font-size: 2rem;
   color: var(--text-secondary);
 }
 
@@ -39,14 +43,15 @@
 }
 
 .title {
-  font-size: 1.8rem;
+  font-size: 3rem;
+  font-style: italic;
   font-weight: 700;
   color: var(--text-primary);
   margin: 0;
 }
 
 .timer {
-  font-size: 1.2rem;
+  font-size: 2rem;
   font-weight: 600;
   color: var(--text-primary);
   background-color: var(--background-color);
@@ -62,7 +67,7 @@
 }
 
 .questionText {
-  font-size: 1.3rem;
+  font-size: 1.7rem;
   font-weight: 500;
   color: var(--text-primary);
   margin-bottom: 2rem;
@@ -91,7 +96,7 @@
   padding: 1rem;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  font-size: 1rem;
+  font-size: 1.5rem;
 }
 
 .optionLabel input[type="radio"] {
@@ -127,7 +132,7 @@
   padding: 12px 24px;
   border-radius: 8px;
   border: none;
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -159,7 +164,7 @@
 .panelTitle {
   margin-top: 0;
   margin-bottom: 1.5rem;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: 600;
   color: var(--text-primary);
   text-align: center;
@@ -207,16 +212,7 @@
 
 /* --- MODIFIED DEFAULT STYLES (for Mobile-First) --- */
 
-.quizPage {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-  /* Reduced padding for smaller screens */
-  padding: 1rem;
-  background-color: var(--background-color);
-  box-sizing: border-box;
-}
+
 
 .quizContainer {
   background: var(--card-background);

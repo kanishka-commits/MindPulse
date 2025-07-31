@@ -21,7 +21,7 @@
 }
 
 .header {
-  font-size: 2.25rem; /* Larger for more impact on desktop */
+  font-size: 2.5rem; /* Larger for more impact on desktop */
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 2rem;
@@ -39,7 +39,7 @@
   padding: 12px 28px;
   border-radius: 50px;
   border: none;
-  font-size: 1rem;
+  font-size:1.3rem;
   font-weight: 600;
   cursor: pointer;
   background-color: var(--primary-color);
@@ -92,13 +92,13 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 700;
   color: var(--primary-color);
 }
 
 .score {
-  font-size: 1.25rem;
+  font-size: 1.8rem;
   color: var(--text-secondary);
   text-align: center;
   margin: 0;
@@ -106,7 +106,7 @@
 
 .score strong {
   color: var(--text-primary);
-  font-size: 1.4rem;
+  font-size: 2.2rem;
 }
 
 .reviewSection {
@@ -116,7 +116,7 @@
 }
 
 .reviewHeader {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   color: var(--text-primary);
   padding-bottom: 0.5rem;
   border-bottom: 2px solid var(--primary-color);
@@ -136,7 +136,7 @@
 }
 
 .questionText {
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   font-weight: 500;
   color: var(--text-primary);
   margin: 0 0 1.25rem 0;
@@ -192,7 +192,7 @@
   border-radius: 6px;
   padding: 0.75rem;
   margin-top: 1rem;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 /* --- RESPONSIVE STYLES --- */
@@ -206,13 +206,13 @@
     padding: 2rem;
   }
   .header {
-    font-size: 1.75rem;
+    font-size: 2rem;
   }
   .score {
     font-size: 1.1rem;
   }
   .questionText {
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
 }
 
@@ -225,7 +225,7 @@
     padding: 1rem;
   }
   .header {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
   }
   .progressRing {
     /* Use Grid for robust centering and layering */

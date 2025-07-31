@@ -111,11 +111,12 @@ function StartPage() {
     }
   }, [dispatch, navigate]);
   return (
-    <><Navbar showLogout={false} />
+    <>
+    {/* <Navbar showLogout={false} /> */}
     <div className={styles.pageCenter}>
       
       <div className={styles.container}>
-        <h1 className={styles.title}>Welcome to Mind Pulse!</h1>
+        <h1 className={styles.title}>Welcome to Mind Pulse</h1>
         <p className={styles.description}>
           Sign in with your email for a passwordless experience, or use a social account.
         </p>

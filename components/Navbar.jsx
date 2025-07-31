@@ -39,7 +39,7 @@ function Navbar({ showLogout = true }) {
 
   return (
     <nav className={styles.navbar} role="navigation" aria-label="Main Navigation">
-      <div className={styles.brand}>🧠 Mind Pulse</div>
+      <div className={styles.brand}>Mind Pulse</div>
 
       <div className={styles.actions}>
         <button

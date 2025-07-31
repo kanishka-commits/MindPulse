@@ -6,8 +6,10 @@ import { decodeHTMLEntities, formatTime } from '../src/utils/helpers';
 import ConfirmLeaveModal from '../components/ConfirmLeaveModal';
 import { useRef } from 'react';
 import { flushSync } from 'react-dom';
+import '../components/WarningModal.css';
 
 function QuizPage() {
+  const [showWarning, setShowWarning] = useState(false);
   const allowNavigationRef = useRef(false); // NEW: track if we allow leaving
   const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
@@ -121,6 +123,9 @@ function QuizPage() {
 
 
   const handleConfirmLeave = () => {
+    localStorage.removeItem('quizData');
+    localStorage.removeItem('quizProgress');
+    localStorage.removeItem('quizResponses');
     localStorage.setItem('skipRestore', 'true'); // prevent immediate redirect back
     allowNavigationRef.current = true;
     setShowConfirm(false);
@@ -142,9 +147,19 @@ function QuizPage() {
   };
 
   const handleSubmit = () => {
+    if (Object.keys(answers).length === 0) {
+      setShowWarning(true);
+      return;
+    }
+    
+    // ✅ 1. Save the report data to sessionStorage first
+    const reportData = { questions, answers };
+    sessionStorage.setItem('quizReportData', JSON.stringify(reportData));
+  
+    // 2. Now, navigate to the report page
     allowNavigationRef.current = true; 
-    localStorage.removeItem('quizData');
-    navigate('/report', { state: { questions, answers } });
+    localStorage.removeItem('quizData'); // Clean up the active quiz
+    navigate('/report', { state: reportData });
   };
 
   if (loading) return <div className={styles.loadingScreen}>Loading Quiz...</div>;
@@ -155,8 +170,8 @@ function QuizPage() {
     <div className={styles.quizPage}>
       <div className={styles.quizContainer}>
         <div className={styles.quizHeader}>
-          <h2 className={styles.title}>Mind Pulse Quiz</h2>
-          <div className={styles.timer}>⏱️ {formatTime(timeLeft)}</div>
+          <h2 className={styles.title}>Each answer counts, keep crushing it!</h2>
+          <div className={styles.timer}> Time Left: {formatTime(timeLeft)}</div>
         </div>
 
         <div className={styles.quizLayout}>
@@ -193,6 +208,17 @@ function QuizPage() {
               >
                 Previous
               </button>
+              {showWarning && (
+                <div className="modal-overlay">  {/* ✅ REUSE this class */}
+                  <div className="modal-box">    {/* ✅ REUSE this class */}
+                    <p>⚠️ Please answer at least one question before submitting!</p>
+                    {/* Use a new class for this specific button */}
+                    <button className="ok-btn" onClick={() => setShowWarning(false)}>
+                      Got It
+                    </button>
+                  </div>
+                </div>
+              )}
               <button className={styles.submitButton} onClick={handleSubmit}>
                 Submit Quiz
               </button>

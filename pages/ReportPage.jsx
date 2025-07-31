@@ -71,16 +71,16 @@ const QuestionReview = React.memo(({ question, userAnswer, index }) => {
 QuestionReview.propTypes = { question: PropTypes.object.isRequired, userAnswer: PropTypes.string, index: PropTypes.number.isRequired };
 QuestionReview.displayName = 'QuestionReview';
 
-const NoData = ({ onGoHome }) => (
-  <div className={styles.reportPage}>
-    <div className={styles.reportContainer}>
-      <h2 className={styles.header}>⚠️ No Quiz Data Available</h2>
-      <p>It seems you've navigated here directly without completing a quiz.</p>
-      <button onClick={onGoHome} className={styles.homeButton}>Go Back to Home</button>
-    </div>
-  </div>
-);
-NoData.propTypes = { onGoHome: PropTypes.func.isRequired };
+// const NoData = ({ onGoHome }) => (
+//   <div className={styles.reportPage}>
+//     <div className={styles.reportContainer}>
+//       <h2 className={styles.header}>⚠️ No Quiz Data Available</h2>
+//       <p>It seems you've navigated here directly without completing a quiz.</p>
+//       <button onClick={onGoHome} className={styles.homeButton}>Go Back to Home</button>
+//     </div>
+//   </div>
+// );
+// NoData.propTypes = { onGoHome: PropTypes.func.isRequired };
 
 // --- Main ReportPage Component ---
 
@@ -106,18 +106,25 @@ function ReportPage() {
 
   // **MODIFICATION**: Update the "Play Again" handler
   const handlePlayAgain = () => {
-    sessionStorage.removeItem('quizReportData'); // Clean up storage
-    navigate('/');
+    // 1. Clean up the finished quiz report data
+    sessionStorage.removeItem('quizReportData');
+
+    // 2. Clean up any saved in-progress quiz data to ensure a fresh start
+    localStorage.removeItem('quizData');
+
+    // 3. Navigate the user to the quiz page to start a new quiz
+    navigate('/quiz');
   };
 
-  if (!questions || questions.length === 0) {
-    return <NoData onGoHome={handlePlayAgain} />;
-  }
+
+  // if (!questions || questions.length === 0) {
+  //   return <NoData onGoHome={handlePlayAgain} />;
+  // }
 
   return (
     <div className={styles.reportPage}>
       <div className={styles.reportContainer}>
-        <h2 className={styles.header}>📋 Quiz Report</h2>
+        <h2 className={styles.header}>Your Quiz Report</h2>
         <ScoreSummary score={score} total={questions.length} />
         <div className={styles.reviewSection}>
           <h3 className={styles.reviewHeader}>Review Your Answers</h3>
@@ -132,7 +139,7 @@ function ReportPage() {
         </div>
         <div className={styles.footer}>
           <button onClick={handlePlayAgain} className={styles.homeButton}>
-            🏠 Play Again
+             Play Again
           </button>
         </div>
       </div>

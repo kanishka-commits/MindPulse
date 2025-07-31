@@ -1,5 +1,3 @@
-/* Navbar.module.css (Elevated) */
-
 @keyframes brand-gradient {
   0% {
     background-position: 0% 50%;
@@ -11,7 +9,9 @@
     background-position: 0% 50%;
   }
 }
-
+*{
+  font-family: var(--font-family);
+}
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -21,7 +21,6 @@
   top: 0;
   z-index: 1000;
   background-color: var(--nav-background);
-  /* Using a gradient for the border for a more subtle look */
   border-bottom: 1px solid;
   border-image-source: linear-gradient(to right, transparent, var(--nav-border), transparent);
   border-image-slice: 1;
@@ -29,13 +28,14 @@
   transition: background-color 0.3s ease, border-color 0.3s ease;
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
+   /* ✅ Added line */
 }
 
 .brand {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 1.6rem;
+  font-size: 2rem;
   font-weight: 700;
   color: var(--text-primary);
   transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
@@ -43,7 +43,6 @@
 
 .brand:hover {
   transform: scale(1.02);
-  /* Animated gradient text effect on hover */
   background: linear-gradient(90deg, var(--primary-color), var(--accent-color), var(--primary-color));
   background-size: 200% auto;
   color: transparent;
@@ -64,16 +63,14 @@
   justify-content: center;
   gap: 0.5rem;
   padding: 0.6rem;
-  border-radius: 10px; /* Slightly more rounded */
-  border: 1px solid transparent; /* Start with a transparent border */
+  border-radius: 10px;
+  border: 1px solid transparent;
   background-color: var(--card-background);
   color: var(--text-secondary);
   cursor: pointer;
-  /* Using a more sophisticated transition timing function */
   transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* Combined hover and focus-visible state for a consistent experience */
 .iconButton:hover,
 .iconButton:focus-visible {
   color: var(--primary-color);
@@ -83,7 +80,6 @@
   box-shadow: 0 4px 12px -2px var(--shadow-color);
 }
 
-/* Specific focus state for keyboard users for better accessibility */
 .iconButton:focus-visible {
   outline: 2px solid var(--primary-color);
   outline-offset: 2px;
@@ -92,7 +88,6 @@
 .buttonText {
   font-size: 0.9rem;
   font-weight: 600;
-  /* The color will be inherited from the parent .logoutButton state */
   color: inherit;
   transition: color 0.3s ease;
 }
@@ -106,7 +101,6 @@
 .logoutButton:focus-visible {
   color: var(--danger-color);
   background-color: var(--danger-bg);
-  /* Add a colored glow for emphasis */
   box-shadow: 0 0 12px 0px var(--danger-color);
 }
 

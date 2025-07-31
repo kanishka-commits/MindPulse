@@ -5,12 +5,27 @@ import QuizPage from '../pages/QuizPage';
 import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
 import ReportPage from '../pages/ReportPage';
-import ProtectedRoute from '../components/ProtectedRoute';
+import ProtQuizRoute from '../components/ProtQuizRoute';
+import ProtReportRoute from '../components/ProtReportRoute';
 import Navbar from '../components/Navbar';
 import { useEffect } from 'react';
 import RestoreLastRoute from '../components/RestoreLastRoute';
 import './index.css';
 
+// ✅ A new component to cleanly manage Navbar logic
+const NavbarController = () => {
+  const location = useLocation();
+
+  // 1. Define routes that get complete Navbar
+  const limitedNavbarRoutes = ['/quiz', '/report']; // Add any other app pages here
+  if (limitedNavbarRoutes.includes(location.pathname)) {
+    return <Navbar/>; // Assumes default showLogout is true
+  }
+
+  // 2. All other routes get the limited Navbar 
+  // This correctly handles the home page ('/') AND any random/undefined paths.
+  return <Navbar  showLogout={false} />; 
+};
 
 function App() {
   const location = useLocation(); 
@@ -21,16 +36,18 @@ function App() {
   return (
     <QuizProvider>
       <div className="app-container">
-      {!['/', '/login', '/register'].includes(location.pathname) && <Navbar />}
+      <NavbarController />
+      
         
         
         <RestoreLastRoute />
         <Routes>
-          <Route path="/" element={<StartPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/quiz" element={<ProtectedRoute> <QuizPage /> </ProtectedRoute>} />
-          <Route path="/report" element={<ReportPage />} />
+          <Route path="/quiz" element={<ProtQuizRoute> <QuizPage /> </ProtQuizRoute>} />
+          <Route path="/report" element={<ProtReportRoute><ReportPage /> </ProtReportRoute>} />
+
+          {/* This catch-all route should be LAST */}
+          {/* It handles both '/' and any random path like '/asdasd' */}
+          <Route path="*" element={<StartPage />} />
         </Routes>
       </div>
     </QuizProvider>
