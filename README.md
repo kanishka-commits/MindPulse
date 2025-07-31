@@ -57,13 +57,14 @@ src/
 ### 🔧 Firebase Setup
 
 Replace the content of `firebaseConfig.js` with:
-
+```
 const firebaseConfig = {
 apiKey: "YOUR_API_KEY",
 authDomain: "YOUR_PROJECT.firebaseapp.com",
 projectId: "YOUR_PROJECT_ID",
 appId: "YOUR_APP_ID"
 };
+```
 
 - Enable Email/Password, Google, and GitHub in Firebase Auth
 - Add `http://localhost:3000` as an authorized redirect URI
