@@ -59,23 +59,20 @@ function StartPage() {
     setMessage('');
 
     const actionCodeSettings = {
-      // URL you want to redirect back to. The domain (www.example.com) must be authorized
-      // in the Firebase Console.
-      url: `${window.location.origin}/verify`,
+      url: `${window.location.origin}/verify`, // MUST match Firebase authorized domain
       handleCodeInApp: true,
-      
     };
-
+  
     try {
       await sendSignInLinkToEmail(auth, email, actionCodeSettings);
       localStorage.setItem('emailForSignIn', email);
       setMessage(`Sign-in link sent to ${email}. Please check your inbox.`);
     } catch (err) {
-      console.error(err);
-      setError('Failed to send link. Please check the email and try again.');
+      console.error('Error Code:', err.code);
+      console.error('Error Message:', err.message);
+      setError(`Failed to send link: ${err.message}`);
     }
   };
-
   // --- Effect to handle user returning from email link ---
 
   useEffect(() => {
